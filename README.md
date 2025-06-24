@@ -10,5 +10,16 @@ This is the **frontend** for the CV Generator web app. It allows users to fill o
 - **Step-by-step wizard form**
 - **Fetch API**
 
-## 📂 Structure
+## ✨ Features
+
+- Step-based form navigation
+- Dynamic validations per field (email format, required fields, etc.)
+- Add/remove multiple:
+  - Links
+  - Skills by category
+  - Work experiences
+  - Education items
+  - Languages
+- Clean and modern design with `styled-components`
+- On submit: sends form data to backend for PDF generation
 
