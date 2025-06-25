@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.fieldset`
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 12px;
   background-color: #fafafa;
 `
@@ -12,8 +12,10 @@ const Section = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: #2f6591;
   margin-bottom: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 const InputGroup = styled.div`
@@ -24,46 +26,78 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #555;
+  color: #2f6591;
   margin-bottom: 4px;
+  display: flex;
 `
 
 const Input = styled.input`
   padding: 10px;
+  color: #2f6591;
+  background-color: transparent;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(32%) sepia(29%) saturate(838%) hue-rotate(166deg) brightness(92%) contrast(89%);
   }
 `
 
 const TextArea = styled.textarea`
-  min-height: 80px;
-  padding: 10px;
+  width: 90%;
+  min-height: 120px;
+  padding: 12px;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  background-color: transparent;
+  color: #2f6591;
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   resize: vertical;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
   }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #2f6591;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1d4566;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #2f6591 #f0f0f0;
 `
 
 const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  justify-content: center;
 `
 
 const ErrorMsg = styled.span`
-  color: #dc3545;
+  color: #f17778;
   font-size: 0.85rem;
   margin-top: 4px;
 `
@@ -75,29 +109,23 @@ const ExperienceItem = styled.div`
   margin-bottom: 24px;
   background: #fff;
 `
-
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-`
-
 const AddButton = styled.button`
-  background-color: #28a745;
+  background-color: #2f6591;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 8px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #479add;
   }
 `
 
 const RemoveButton = styled.button`
-  background-color: #dc3545;
+  background-color: #f17778;
   color: white;
   border: none;
   border-radius: 8px;
@@ -210,6 +238,7 @@ const Experience = forwardRef(({ experience, onChange }, ref) => {
             <Label htmlFor={`position-${idx}`}>Puesto</Label>
             <Input
               id={`position-${idx}`}
+              placeholder='Puesto de trabajo'
               type="text"
               value={item.position}
               onChange={e => handleChangeField(idx, 'position', e.target.value)}
@@ -222,6 +251,7 @@ const Experience = forwardRef(({ experience, onChange }, ref) => {
             <Label htmlFor={`company-${idx}`}>Empresa</Label>
             <Input
               id={`company-${idx}`}
+              placeholder='Nombre de la empresa'
               type="text"
               value={item.company}
               onChange={e => handleChangeField(idx, 'company', e.target.value)}
@@ -249,8 +279,9 @@ const Experience = forwardRef(({ experience, onChange }, ref) => {
                 id={`currentlyWorking-${idx}`}
                 checked={item.currentlyWorking}
                 onChange={e => handleCheckboxChange(idx, e.target.checked)}
+                style={{ marginRight: '5px', width: '15px', height: '15px' }}
               />
-              <Label htmlFor={`currentlyWorking-${idx}`} style={{ marginLeft: '8px' }}>
+              <Label htmlFor={`currentlyWorking-${idx}`} style={{ marginLeft: '5px' }}>
                 Actualmente trabajo acá
               </Label>
             </CheckboxGroup>
@@ -274,6 +305,7 @@ const Experience = forwardRef(({ experience, onChange }, ref) => {
             <Label htmlFor={`description-${idx}`}>Descripción</Label>
             <TextArea
               id={`description-${idx}`}
+              placeholder='Descripción de tus responsabilidades y logros'
               value={item.description}
               onChange={e => handleChangeField(idx, 'description', e.target.value)}
               error={errors[idx]?.description}

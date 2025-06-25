@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.fieldset`
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 12px;
   background-color: #fafafa;
 `
@@ -12,8 +12,10 @@ const Section = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: #2f6591;
   margin-bottom: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 const CategoryContainer = styled.div`
@@ -32,50 +34,54 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #555;
+  color: #2f6591;
   margin-bottom: 4px;
+  display: flex;
 `
 
 const Input = styled.input`
   padding: 10px;
+  color: #2f6591;
+  background-color: transparent;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
   }
 `
 
 const ErrorMsg = styled.span`
-  color: #dc3545;
+  color: #f17778;
   font-size: 0.85rem;
   margin-top: 4px;
 `
 
 const AddButton = styled.button`
-  background-color: #28a745;
+  background-color: #2f6591;
   color: white;
   padding: 8px 16px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 8px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #479add;
   }
 `
 
 const RemoveButton = styled.button`
-  background-color: #dc3545;
+  background-color: #f17778;
   color: white;
+  padding: 8px 16px;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 0.9rem;
   cursor: pointer;
 
   &:hover {
@@ -196,7 +202,7 @@ const Skills = forwardRef(({ skills, onChange }, ref) => {
 
     return (
         <Section>
-            <Legend>Skills</Legend>
+            <Legend>Habilidades</Legend>
 
             {categories.map((cat, catIdx) => (
                 <CategoryContainer key={catIdx}>
@@ -204,6 +210,7 @@ const Skills = forwardRef(({ skills, onChange }, ref) => {
                         <Label htmlFor={`cat-name-${catIdx}`}>Nombre de la categoría</Label>
                         <Input
                             id={`cat-name-${catIdx}`}
+                            placeholder='Ej: Lenguajes de programación'
                             type="text"
                             value={cat.categoryName}
                             onChange={e => handleCategoryNameChange(catIdx, e.target.value)}
@@ -214,19 +221,19 @@ const Skills = forwardRef(({ skills, onChange }, ref) => {
 
                     {cat.skills.map((skill, skillIdx) => (
                         <InputGroup key={`cat-${catIdx}-skill-${skillIdx}`}>
-                            <Label>Skill</Label>
+                            <Label>Habilidad</Label>
                             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <Input
                                     type="text"
+                                    placeholder='Ej: JavaScript'
                                     value={skill}
                                     onChange={e => handleSkillChange(catIdx, skillIdx, e.target.value)}
                                     error={errors[catIdx]?.skills?.[skillIdx]}
-                                    placeholder="Nombre de skill"
                                     style={{ flex: 1 }}
                                 />
                                 {cat.skills.length > 1 && (
                                     <RemoveButton type="button" onClick={() => removeSkill(catIdx, skillIdx)}>
-                                        Eliminar
+                                        X
                                     </RemoveButton>
                                 )}
                             </div>
@@ -239,7 +246,7 @@ const Skills = forwardRef(({ skills, onChange }, ref) => {
                     </AddButton>
 
                     {categories.length > 1 && (
-                        <RemoveButton type="button" onClick={() => removeCategory(catIdx)} style={{ marginTop: '12px' }}>
+                        <RemoveButton type="button" onClick={() => removeCategory(catIdx)} style={{ marginLeft: '12px' }}>
                             Eliminar categoría
                         </RemoveButton>
                     )}

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.fieldset`
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 12px;
   background-color: #fafafa;
 `
@@ -12,8 +12,10 @@ const Section = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: #2f6591;
   margin-bottom: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 const InputGroup = styled.div`
@@ -24,38 +26,47 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #555;
+  color: #2f6591;
   margin-bottom: 4px;
+  display: flex;
 `
 
 const Input = styled.input`
   padding: 10px;
+  color: #2f6591;
+  background-color: transparent;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(32%) sepia(29%) saturate(838%) hue-rotate(166deg) brightness(92%) contrast(89%);
   }
 `
 
 const Select = styled.select`
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  background-color: transparent;
+  color: #2f6591;
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#007bff')};
     outline: none;
   }
 `
 
 const ErrorMsg = styled.span`
-  color: #dc3545;
+  color: #f17778;
   font-size: 0.85rem;
   margin-top: 4px;
 `
@@ -69,21 +80,22 @@ const LanguageItem = styled.div`
 `
 
 const AddButton = styled.button`
-  background-color: #28a745;
+  background-color: #2f6591;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 8px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #479add;
   }
 `
 
 const RemoveButton = styled.button`
-  background-color: #dc3545;
+  background-color: #f17778;
   color: white;
   border: none;
   border-radius: 8px;
@@ -97,15 +109,13 @@ const RemoveButton = styled.button`
 `
 
 const languageLevels = [
-    'Básico',
-    'Intermedio',
-    'Avanzado',
-    'Nativo',
+    { value: '1', label: 'Básico' },
+    { value: '2', label: 'Intermedio' },
+    { value: '3', label: 'Avanzado' },
+    { value: '4', label: 'Nativo' },
 ]
 
 const Languages = forwardRef(({ languages, onChange }, ref) => {
-    const [hasTriedSubmit, setHasTriedSubmit] = useState(false)
-
     const [items, setItems] = useState(
         languages.length
             ? languages
@@ -124,7 +134,6 @@ const Languages = forwardRef(({ languages, onChange }, ref) => {
     }, [items])
 
     const validate = () => {
-        setHasTriedSubmit(true)
         const errs = items.map(item => {
             const e = {}
             if (!item.language.trim()) e.language = 'El idioma es obligatorio'
@@ -168,7 +177,6 @@ const Languages = forwardRef(({ languages, onChange }, ref) => {
     return (
         <Section>
             <Legend>Idiomas</Legend>
-
             {items.map((item, idx) => (
                 <LanguageItem key={idx}>
                     <InputGroup>
@@ -178,9 +186,10 @@ const Languages = forwardRef(({ languages, onChange }, ref) => {
                             type="text"
                             value={item.language}
                             onChange={e => handleChangeField(idx, 'language', e.target.value)}
+                            placeholder='Ej: Inglés'
                             error={errors[idx]?.language}
                         />
-                        {hasTriedSubmit && errors[idx]?.language && <ErrorMsg>{errors[idx].language}</ErrorMsg>}
+                        {errors[idx]?.language && <ErrorMsg>{errors[idx].language}</ErrorMsg>}
                     </InputGroup>
 
                     <InputGroup>
@@ -193,12 +202,12 @@ const Languages = forwardRef(({ languages, onChange }, ref) => {
                         >
                             <option value="">Selecciona un nivel</option>
                             {languageLevels.map(level => (
-                                <option key={level} value={level}>
-                                    {level}
+                                <option key={level} value={level.value}>
+                                    {level.label}
                                 </option>
                             ))}
                         </Select>
-                        {hasTriedSubmit && errors[idx]?.level && <ErrorMsg>{errors[idx].level}</ErrorMsg>}
+                        {errors[idx]?.level && <ErrorMsg>{errors[idx].level}</ErrorMsg>}
                     </InputGroup>
 
                     {items.length > 1 && (
@@ -208,7 +217,6 @@ const Languages = forwardRef(({ languages, onChange }, ref) => {
                     )}
                 </LanguageItem>
             ))}
-
             <AddButton type="button" onClick={addLanguage}>
                 + Agregar idioma
             </AddButton>

@@ -1,4 +1,3 @@
-// src/components/CVForm.jsx
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -11,9 +10,8 @@ import Education from './Education'
 import Languages from './Languages'
 
 const FormContainer = styled.div`
-  min-height: 100vh;
   padding: 40px;
-  background-color: #f4f6f8;
+  background-color: transparent;
   display: flex;
   justify-content: center;
 `
@@ -21,17 +19,25 @@ const FormContainer = styled.div`
 const Form = styled.form`
   width: 100%;
   max-width: 800px;
+  min-width: 500px;
   background-color: #fff;
-  padding: 32px;
+  padding: 20px 50px 20px 50px;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #ddd;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 `
 
 const Title = styled.h1`
   font-size: 2rem;
   text-align: center;
-  margin-bottom: 32px;
-  color: #333;
+  color: #2f6591;
+  margin-bottom: 10px;
+`
+const Steps = styled.h2`
+  font-size: 1.3;
+  text-align: center;
+  color: #479add;
+  margin-top: 0px;
 `
 
 const ButtonRow = styled.div`
@@ -41,16 +47,18 @@ const ButtonRow = styled.div`
 `
 
 const NavButton = styled.button`
-  background-color: ${props => (props.primary ? '#007bff' : '#ccc')};
+  background-color: ${props => (props.primary ? '#2f6591' : '#ccc')};
   color: white;
   font-size: 1rem;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
   &:hover {
-    background-color: ${props => (props.primary ? '#0056b3' : '#999')};
+    background-color: ${props => (props.primary ? '#479add' : '#999')};
   }
 
   &:disabled {
@@ -59,7 +67,41 @@ const NavButton = styled.button`
   }
 `
 
+const SpinningLoader = styled.div`
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2f6591;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`
+
+const LanguageButton = styled.button`
+  background-color: #ffffff;
+  color: #2f6591;
+  font-size: 1.2rem;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transition: all 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  &:hover {
+    background-color: #479add;
+    color: #ffffff;
+  }
+`
+
 export default function CVForm() {
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
         personal: {},
         profile: '',
@@ -68,9 +110,11 @@ export default function CVForm() {
         experience: [],
         education: [],
         languages: [],
+        language: 'es'
     })
 
     const [step, setStep] = useState(0)
+    const [hasInteracted, setHasInteracted] = useState(false)
     const stepRefs = [
         useRef(null),
         useRef(null),
@@ -82,7 +126,15 @@ export default function CVForm() {
     ]
 
     const updateField = (field, value) => {
+        setHasInteracted(true)
         setFormData(prev => ({ ...prev, [field]: value }))
+    }
+
+    const toggleLanguage = () => {
+        setFormData(prev => ({
+            ...prev,
+            language: prev.language === 'es' ? 'en' : 'es'
+        }))
     }
 
     const handleNext = () => {
@@ -92,16 +144,25 @@ export default function CVForm() {
             if (!valid) return
         }
         setStep(s => s + 1)
+        setHasInteracted(false)
     }
 
-    const handlePrev = () => setStep(s => s - 1)
+    const handlePrev = () => {
+        setStep(s => s - 1)
+        setHasInteracted(false)
+    }
 
     const handleSubmit = async e => {
         e.preventDefault()
+        setIsLoading(true)
+        setHasInteracted(true)
         const currentRef = stepRefs[step].current
         if (currentRef?.validate) {
             const valid = currentRef.validate()
-            if (!valid) return
+            if (!valid) {
+                setIsLoading(false)
+                return
+            }
         }
 
         try {
@@ -118,6 +179,8 @@ export default function CVForm() {
             window.open(url, '_blank')
         } catch (err) {
             console.error('Error al generar el PDF:', err)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -196,6 +259,7 @@ export default function CVForm() {
                     ref={stepRefs[6]}
                     languages={formData.languages}
                     onChange={data => updateField('languages', data)}
+                    hasInteracted={hasInteracted}
                 />
             ),
         },
@@ -206,11 +270,24 @@ export default function CVForm() {
 
     return (
         <FormContainer>
-            <Form onSubmit={handleSubmit}>
-                <Title>{steps[step].label}</Title>
-                <Title>Paso {steps[step].id} de {steps.length}</Title>
-                {steps[step].component}
+            <Form
+                onSubmit={handleSubmit}
+                autoComplete="off"
+                onKeyDown={e => {
+                    if (isLastStep && e.key === 'Enter') {
+                        e.preventDefault()
+                    }
+                }}
+            >
+                {/* Previene el submit automático del navegador */}
+                <input type="submit" style={{ display: 'none' }} disabled />
 
+                <LanguageButton type="button" onClick={toggleLanguage}>
+                    {formData.language === 'es' ? 'Crear en inglés' : 'Crear en español'}
+                </LanguageButton>
+                <Title>{steps[step].label}</Title>
+                <Steps>Paso {steps[step].id} de {steps.length}</Steps>
+                {steps[step].component}
                 <ButtonRow isFirstStep={isFirstStep}>
                     {!isFirstStep && (
                         <NavButton type="button" onClick={handlePrev}>
@@ -219,7 +296,7 @@ export default function CVForm() {
                     )}
                     {isLastStep ? (
                         <NavButton type="submit" primary>
-                            Generar PDF
+                            {isLoading ? <SpinningLoader /> : 'Generar PDF'}
                         </NavButton>
                     ) : (
                         <NavButton type="button" primary onClick={handleNext}>

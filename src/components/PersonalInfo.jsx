@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.fieldset`
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 12px;
   background-color: #fafafa;
 `
@@ -12,8 +12,10 @@ const Section = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: #2f6591;
   margin-bottom: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 const InputGroup = styled.div`
@@ -24,25 +26,28 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #555;
+  color: #2f6591;
   margin-bottom: 4px;
+  display: flex;
 `
 
 const Input = styled.input`
   padding: 10px;
+  color: #2f6591;
+  background-color: transparent;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
   }
 `
 
 const ErrorMsg = styled.span`
-  color: #dc3545;
+  color: #f17778;
   font-size: 0.875rem;
   margin-top: 4px;
 `
@@ -92,11 +97,11 @@ const PersonalInfo = forwardRef(({ data, onChange }, ref) => {
   return (
     <Section>
       <Legend>Información Personal</Legend>
-
       <InputGroup>
         <Label htmlFor="fullName">Nombre completo</Label>
         <Input
           id="fullName"
+          placeholder='Ej: Juan Pérez'
           type="text"
           value={formData.fullName}
           onChange={e => handleChange('fullName', e.target.value)}
@@ -109,6 +114,7 @@ const PersonalInfo = forwardRef(({ data, onChange }, ref) => {
         <Label htmlFor="phone">Teléfono</Label>
         <Input
           id="phone"
+          placeholder='Ej: +54 9 11 2345-6789'
           type="tel"
           value={formData.phone}
           onChange={e => handleChange('phone', e.target.value)}
@@ -121,6 +127,7 @@ const PersonalInfo = forwardRef(({ data, onChange }, ref) => {
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
+          placeholder='Ej: juanperez@mail.com'
           type="email"
           value={formData.email}
           onChange={e => handleChange('email', e.target.value)}
@@ -133,6 +140,7 @@ const PersonalInfo = forwardRef(({ data, onChange }, ref) => {
         <Label htmlFor="city">Ciudad</Label>
         <Input
           id="city"
+          placeholder='Ej: Capital Federal'
           type="text"
           value={formData.city}
           onChange={e => handleChange('city', e.target.value)}
@@ -145,6 +153,7 @@ const PersonalInfo = forwardRef(({ data, onChange }, ref) => {
         <Label htmlFor="province">Provincia</Label>
         <Input
           id="province"
+          placeholder='Ej: Buenos Aires'
           type="text"
           value={formData.province}
           onChange={e => handleChange('province', e.target.value)}

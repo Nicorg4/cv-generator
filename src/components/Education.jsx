@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Section = styled.fieldset`
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 12px;
   background-color: #fafafa;
 `
@@ -12,8 +12,10 @@ const Section = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: #2f6591;
   margin-bottom: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 const InputGroup = styled.div`
@@ -24,19 +26,22 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #555;
+  color: #2f6591;
   margin-bottom: 4px;
+  display: flex;
 `
 
 const Input = styled.input`
   padding: 10px;
+  color: #2f6591;
+  background-color: transparent;
   border-radius: 8px;
-  border: 1px solid ${props => (props.error ? '#dc3545' : '#ccc')};
+  border: 1px solid ${props => (props.error ? '#f17778' : '#ccc')};
   font-size: 1rem;
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: ${props => (props.error ? '#dc3545' : '#007bff')};
+    border-color: ${props => (props.error ? '#f17778' : '#2f6591')};
     outline: none;
   }
 `
@@ -45,10 +50,11 @@ const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  justify-content: center;
 `
 
 const ErrorMsg = styled.span`
-  color: #dc3545;
+  color: #f17778;
   font-size: 0.85rem;
   margin-top: 4px;
 `
@@ -61,28 +67,23 @@ const EducationItem = styled.div`
   background: #fff;
 `
 
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-`
-
 const AddButton = styled.button`
-  background-color: #28a745;
+  background-color: #2f6591;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 8px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #479add;
   }
 `
 
 const RemoveButton = styled.button`
-  background-color: #dc3545;
+  background-color: #f17778;
   color: white;
   border: none;
   border-radius: 8px;
@@ -181,6 +182,7 @@ const Education = forwardRef(({ education, onChange }, ref) => {
               type="text"
               value={item.name}
               onChange={e => handleChangeField(idx, 'name', e.target.value)}
+              placeholder='Ej: Ingeniería Informática'
               error={errors[idx]?.name}
             />
             {errors[idx]?.name && <ErrorMsg>{errors[idx].name}</ErrorMsg>}
@@ -193,6 +195,7 @@ const Education = forwardRef(({ education, onChange }, ref) => {
               type="text"
               value={item.institution}
               onChange={e => handleChangeField(idx, 'institution', e.target.value)}
+              placeholder='Ej: Universidad Católica Argentina'
               error={errors[idx]?.institution}
             />
             {errors[idx]?.institution && <ErrorMsg>{errors[idx].institution}</ErrorMsg>}
@@ -205,6 +208,7 @@ const Education = forwardRef(({ education, onChange }, ref) => {
                 id={`edu-ongoing-${idx}`}
                 checked={item.ongoing}
                 onChange={e => handleCheckboxChange(idx, e.target.checked)}
+                style={{ marginRight: '5px', width: '15px', height: '15px' }}
               />
               <Label htmlFor={`edu-ongoing-${idx}`} style={{ marginLeft: '8px' }}>
                 En curso
