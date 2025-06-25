@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 
 import PersonalInfo from './PersonalInfo'
@@ -152,6 +152,8 @@ export default function CVForm() {
         setHasInteracted(false)
     }
 
+    const URL = import.meta.env.VITE_API_URL
+
     const handleSubmit = async e => {
         e.preventDefault()
         setIsLoading(true)
@@ -166,7 +168,7 @@ export default function CVForm() {
         }
 
         try {
-            const res = await fetch('http://localhost:3000/generate', {
+            const res = await fetch(`${URL}/generate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -279,7 +281,6 @@ export default function CVForm() {
                     }
                 }}
             >
-                {/* Previene el submit automático del navegador */}
                 <input type="submit" style={{ display: 'none' }} disabled />
 
                 <LanguageButton type="button" onClick={toggleLanguage}>
