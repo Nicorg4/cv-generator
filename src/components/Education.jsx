@@ -104,7 +104,8 @@ const Education = forwardRef(({ education, onChange }, ref) => {
           {
             name: '',
             institution: '',
-            year: '',
+            startYear: '',
+            endYear: '',
             ongoing: false,
           },
         ]
@@ -121,7 +122,8 @@ const Education = forwardRef(({ education, onChange }, ref) => {
       const e = {}
       if (!item.name.trim()) e.name = 'El nombre es obligatorio'
       if (!item.institution.trim()) e.institution = 'La entidad es obligatoria'
-      if (!item.ongoing && !item.year.trim()) e.year = 'El año es obligatorio o marcar "En curso"'
+      if (!item.startYear.trim()) e.startYear = 'El año de inicio es obligatorio'
+      if (!item.ongoing && !item.endYear.trim()) e.endYear = 'El año de finalización es obligatorio o marcar "En curso"'
       return e
     })
 
@@ -146,7 +148,7 @@ const Education = forwardRef(({ education, onChange }, ref) => {
     setItems(prev => {
       const copy = [...prev]
       copy[index].ongoing = checked
-      if (checked) copy[index].year = ''
+      if (checked) copy[index].endYear = ''
       return copy
     })
   }
@@ -157,7 +159,8 @@ const Education = forwardRef(({ education, onChange }, ref) => {
       {
         name: '',
         institution: '',
-        year: '',
+        startYear: '',
+        endYear: '',
         ongoing: false,
       },
     ])
@@ -202,6 +205,19 @@ const Education = forwardRef(({ education, onChange }, ref) => {
           </InputGroup>
 
           <InputGroup>
+            <Label htmlFor={`edu-startYear-${idx}`}>Año de inicio</Label>
+            <Input
+              id={`edu-startYear-${idx}`}
+              type="text"
+              value={item.startYear}
+              onChange={e => handleChangeField(idx, 'startYear', e.target.value)}
+              placeholder="Ej: 2020"
+              error={errors[idx]?.startYear}
+            />
+            {errors[idx]?.startYear && <ErrorMsg>{errors[idx].startYear}</ErrorMsg>}
+          </InputGroup>
+
+          <InputGroup>
             <CheckboxGroup>
               <input
                 type="checkbox"
@@ -217,16 +233,16 @@ const Education = forwardRef(({ education, onChange }, ref) => {
 
             {!item.ongoing && (
               <>
-                <Label htmlFor={`edu-year-${idx}`}>Año</Label>
+                <Label htmlFor={`edu-endYear-${idx}`}>Año de finalización</Label>
                 <Input
-                  id={`edu-year-${idx}`}
+                  id={`edu-endYear-${idx}`}
                   type="text"
-                  value={item.year}
-                  onChange={e => handleChangeField(idx, 'year', e.target.value)}
-                  error={errors[idx]?.year}
+                  value={item.endYear}
+                  onChange={e => handleChangeField(idx, 'endYear', e.target.value)}
+                  error={errors[idx]?.endYear}
                   placeholder="Ej: 2024"
                 />
-                {errors[idx]?.year && <ErrorMsg>{errors[idx].year}</ErrorMsg>}
+                {errors[idx]?.endYear && <ErrorMsg>{errors[idx].endYear}</ErrorMsg>}
               </>
             )}
           </InputGroup>
